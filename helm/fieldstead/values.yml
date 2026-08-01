@@ -1,0 +1,34 @@
+replicaCount: 1
+
+images:
+  auth:
+    repository: 686849058699.dkr.ecr.us-east-1.amazonaws.com/fieldstead-auth
+    tag: latest
+
+  product:
+    repository: 686849058699.dkr.ecr.us-east-1.amazonaws.com/fieldstead-products
+    tag: latest
+
+  cart:
+    repository: 686849058699.dkr.ecr.us-east-1.amazonaws.com/fieldstead-cart
+    tag: latest
+
+  order:
+    repository: 686849058699.dkr.ecr.us-east-1.amazonaws.com/fieldstead-orders
+    tag: latest
+
+  gateway:
+    repository: 686849058699.dkr.ecr.us-east-1.amazonaws.com/fieldstead-gateway
+    tag: latest
+
+  frontend:
+    repository: 686849058699.dkr.ecr.us-east-1.amazonaws.com/fieldstead-frontend
+    tag: latest
+
+  mysql:
+    repository: 686849058699.dkr.ecr.us-east-1.amazonaws.com/fieldstead-mysql
+    tag: latest
+
+  nginx:
+    repository: 686849058699.dkr.ecr.us-east-1.amazonaws.com/fieldstead-nginx
+    tag: latest

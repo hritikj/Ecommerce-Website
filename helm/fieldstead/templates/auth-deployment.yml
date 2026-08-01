@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  labels:
+    app: auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+        - name: auth-service
+          image: "{{ .Values.images.auth.repository }}:{{ .Values.images.auth.tag }}"
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 4001
+
+          env:
+            - name: DB_HOST
+              value: "mysql"
+
+            - name: DB_USER
+              value: "root"
+
+            - name: DB_PASSWORD
+              value: "root"
+
+            - name: DB_NAME
+              value: "auth_db"
+
+            - name: JWT_SECRET
+              value: "change-this-secret-in-production"
+
+            - name: PORT
+              value: "4001"

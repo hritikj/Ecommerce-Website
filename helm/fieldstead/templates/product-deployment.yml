@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+  labels:
+    app: product-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+        - name: product-service
+          image: "{{ .Values.images.product.repository }}:{{ .Values.images.product.tag }}"
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 4002
+
+          env:
+            - name: DB_HOST
+              value: "mysql"
+
+            - name: DB_USER
+              value: "root"
+
+            - name: DB_PASSWORD
+              value: "root"
+
+            - name: DB_NAME
+              value: "product_db"
+
+            - name: JWT_SECRET
+              value: "change-this-secret-in-production"
+
+            - name: PORT
+              value: "4002"
+
+          

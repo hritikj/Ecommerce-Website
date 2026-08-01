@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  labels:
+    app: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: "{{ .Values.images.gateway.repository }}:{{ .Values.images.gateway.tag }}"
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 4000
+
+          env:
+            - name: AUTH_SERVICE_URL
+              value: "http://auth-service:4001"
+
+            - name: PRODUCT_SERVICE_URL
+              value: "http://product-service:4002"
+
+            - name: CART_SERVICE_URL
+              value: "http://cart-service:4003"
+
+            - name: ORDER_SERVICE_URL
+              value: "http://order-service:4004"
+
+            - name: PORT
+              value: "4000"
