@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Fieldstead — Goods, Made Plainly{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-fieldstead sticky-top py-3">
+  <div class="container">
+    <a class="navbar-brand brand-mark" href="{{ url_for('home') }}">Fieldstead</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('products') }}">Shop</a></li>
+        {% if current_user %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('orders') }}">Orders</a></li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('cart') }}">
+            Cart {% if cart_count %}<span class="badge rounded-pill bg-danger">{{ cart_count }}</span>{% endif %}
+          </a>
+        </li>
+        {% if current_user %}
+        <li class="nav-item d-flex align-items-center gap-2">
+          <span class="text-muted small d-none d-md-inline">Hi, {{ current_user.name.split(' ')[0] }}</span>
+          <form method="post" action="{{ url_for('logout') }}" class="m-0">
+            <button class="btn btn-outline-forest btn-sm rounded-pill px-3" type="submit">Sign out</button>
+          </form>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="btn btn-outline-forest btn-sm rounded-pill px-3" href="{{ url_for('login') }}">Sign in</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer mt-5">
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-6 col-md-3">
+        <div class="brand-mark text-white mb-2">Fieldstead</div>
+        <p class="small">Small-batch goods for a house that gets used, not just looked at.</p>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="eyebrow mb-2">Shop</div>
+        <ul class="list-unstyled small">
+          <li>Home Goods</li><li>Kitchen</li><li>Apparel</li><li>Stationery</li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="eyebrow mb-2">Support</div>
+        <ul class="list-unstyled small">
+          <li>Shipping</li><li>Returns</li><li>Care Guides</li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="eyebrow mb-2">Studio</div>
+        <ul class="list-unstyled small">
+          <li>Our Makers</li><li>Journal</li><li>Contact</li>
+        </ul>
+      </div>
+    </div>
+    <hr class="border-light opacity-25 mt-4">
+    <p class="text-center small mb-0 opacity-50">© 2026 Fieldstead — a demo storefront on a Flask microservice architecture.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

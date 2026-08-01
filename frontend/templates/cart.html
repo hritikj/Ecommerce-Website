@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="font-display mb-4">Your Cart</h1>
+
+  {% if items|length == 0 %}
+    <p class="text-muted text-center py-5">Your cart is empty. <a href="{{ url_for('products') }}">Start shopping →</a></p>
+  {% else %}
+  <div class="row g-5">
+    <div class="col-lg-8">
+      {% for i in items %}
+      <div class="d-flex gap-3 align-items-center border-bottom py-3">
+        <img src="{{ i.product.image_url }}" style="width:90px;height:90px;object-fit:cover;" class="rounded-1" alt="{{ i.product.name }}">
+        <div class="flex-grow-1">
+          <h3 class="fs-6 font-display mb-1">{{ i.product.name }}</h3>
+          <p class="text-muted small mb-2">${{ '%.2f'|format(i.product.price) }} each</p>
+          <form method="post" action="{{ url_for('update_cart', product_id=i.product_id) }}" class="d-flex align-items-center gap-2">
+            <input type="number" name="quantity" value="{{ i.quantity }}" min="1" class="form-control form-control-sm" style="width:70px;">
+            <button class="btn btn-outline-forest btn-sm" type="submit">Update</button>
+          </form>
+        </div>
+        <div class="text-end">
+          <p class="fw-semibold mb-2">${{ '%.2f'|format(i.product.price * i.quantity) }}</p>
+          <form method="post" action="{{ url_for('remove_from_cart', product_id=i.product_id) }}">
+            <button class="btn btn-link btn-sm text-danger p-0" type="submit">Remove</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="col-lg-4">
+      <div class="border rounded-1 p-4">
+        <h3 class="font-display fs-5 mb-3">Order Summary</h3>
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted">Subtotal</span><span>${{ '%.2f'|format(subtotal) }}</span>
+        </div>
+        <div class="d-flex justify-content-between mb-3">
+          <span class="text-muted">Shipping</span><span>Free</span>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between fw-semibold mb-4">
+          <span>Total</span><span>${{ '%.2f'|format(subtotal) }}</span>
+        </div>
+        <a href="{{ url_for('checkout') }}" class="btn btn-forest w-100">Proceed to checkout</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

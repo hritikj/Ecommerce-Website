@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="row g-5">
+    <div class="col-md-6">
+      <img src="{{ product.image_url }}" class="img-fluid rounded-1" alt="{{ product.name }}">
+    </div>
+    <div class="col-md-6">
+      <div class="eyebrow mb-2">{{ product.category_name or 'Fieldstead' }}</div>
+      <h1 class="font-display mb-2">{{ product.name }}</h1>
+      <p class="fs-4 mb-4" style="color: var(--brass);">${{ '%.2f'|format(product.price) }}</p>
+      <p class="text-muted mb-4">{{ product.description }}</p>
+
+      {% if product.stock > 0 %}
+      <p class="small text-success mb-3">In stock — {{ product.stock }} available</p>
+      <form method="post" action="{{ url_for('add_to_cart', product_id=product.id) }}" class="d-flex gap-2">
+        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}"
+               class="form-control" style="max-width: 90px;">
+        <button type="submit" class="btn btn-forest px-4">Add to cart</button>
+      </form>
+      {% else %}
+      <p class="small text-danger mb-3">Currently out of stock</p>
+      <button class="btn btn-secondary px-4" disabled>Sold out</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

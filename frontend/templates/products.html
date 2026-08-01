@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="eyebrow mb-2">The Full Range</div>
+  <h1 class="font-display mb-4">Shop All Goods</h1>
+
+  <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
+    <div class="d-flex flex-wrap gap-2">
+      <a href="{{ url_for('products', search=search) }}"
+         class="category-pill {% if not category_id %}active{% endif %}">All</a>
+      {% for c in categories %}
+      <a href="{{ url_for('products', category_id=c.id, search=search) }}"
+         class="category-pill {% if category_id|string == c.id|string %}active{% endif %}">{{ c.name }}</a>
+      {% endfor %}
+    </div>
+    <form method="get" class="d-flex" style="max-width: 280px;">
+      {% if category_id %}<input type="hidden" name="category_id" value="{{ category_id }}">{% endif %}
+      <input class="form-control" type="text" name="search" value="{{ search }}" placeholder="Search products…">
+    </form>
+  </div>
+
+  {% if products|length == 0 %}
+    <p class="text-muted text-center py-5">No products match your search yet.</p>
+  {% else %}
+  <div class="row g-4">
+    {% for p in products %}
+    <div class="col-6 col-md-3">
+      <a href="{{ url_for('product_detail', product_id=p.id) }}" class="text-decoration-none text-dark">
+        <div class="card product-card border-0 position-relative">
+          <span class="position-absolute top-0 start-0 m-2 badge bg-light text-dark border eyebrow">{{ p.category_name or 'Fieldstead' }}</span>
+          <img src="{{ p.image_url }}" class="card-img-top rounded-1" alt="{{ p.name }}">
+          <div class="card-body px-0">
+            <h3 class="fs-6 font-display mt-2 mb-1">{{ p.name }}</h3>
+            <p class="text-muted small mb-0">${{ '%.2f'|format(p.price) }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

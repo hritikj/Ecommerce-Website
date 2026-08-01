@@ -1,0 +1,97 @@
+:root {
+  --forest: #1F3329;
+  --forest-light: #2C4A3B;
+  --ivory: #F6F2E9;
+  --brass: #B4863B;
+  --clay: #A3462F;
+}
+
+body {
+  background-color: var(--ivory);
+  color: var(--forest);
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.navbar-fieldstead {
+  background-color: var(--ivory);
+  border-bottom: 1px solid rgba(31, 51, 41, 0.1);
+}
+
+.brand-mark {
+  font-family: Georgia, serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--forest);
+}
+
+.eyebrow {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--brass);
+}
+
+.btn-forest {
+  background-color: var(--forest);
+  border-color: var(--forest);
+  color: var(--ivory);
+}
+.btn-forest:hover {
+  background-color: var(--forest-light);
+  border-color: var(--forest-light);
+  color: var(--ivory);
+}
+
+.btn-outline-forest {
+  border-color: rgba(31, 51, 41, 0.3);
+  color: var(--forest);
+}
+.btn-outline-forest:hover {
+  background-color: var(--forest);
+  color: var(--ivory);
+  border-color: var(--forest);
+}
+
+.product-card img {
+  height: 260px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.product-card:hover img {
+  transform: scale(1.04);
+}
+
+.category-pill {
+  border: 1px solid rgba(31, 51, 41, 0.2);
+  border-radius: 999px;
+  padding: 0.35rem 1rem;
+  font-size: 0.85rem;
+  color: var(--forest);
+  text-decoration: none;
+  display: inline-block;
+}
+.category-pill.active,
+.category-pill:hover {
+  background-color: var(--forest);
+  color: var(--ivory);
+  border-color: var(--forest);
+}
+
+footer.site-footer {
+  background-color: var(--forest);
+  color: rgba(246, 242, 233, 0.75);
+}
+footer.site-footer .eyebrow {
+  color: #D3A75C;
+}
+
+.hero-badge {
+  background-color: var(--ivory);
+  border: 1px solid rgba(31, 51, 41, 0.15);
+  border-radius: 4px;
+}
+
+.font-display {
+  font-family: Georgia, serif;
+}

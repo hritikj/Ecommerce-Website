@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="row align-items-center g-5">
+    <div class="col-lg-6">
+      <div class="eyebrow mb-3">No. 01 — Autumn Catalog</div>
+      <h1 class="display-4 font-display mb-3" style="line-height:1.05;">Goods worth<br>keeping for years.</h1>
+      <p class="text-muted mb-4" style="max-width:32rem;">
+        Fieldstead sources small-batch homeware, apparel, and kitchen tools from makers
+        who build things to be used daily — and repaired, not replaced.
+      </p>
+      <a href="{{ url_for('products') }}" class="btn btn-forest btn-lg px-4 rounded-1">Browse the shop</a>
+    </div>
+    <div class="col-lg-6 position-relative">
+      <img src="https://images.unsplash.com/photo-1449247709967-d4461a6a6103?w=900"
+           class="img-fluid rounded-1" alt="A well-worn wooden table set with ceramic goods">
+      <div class="hero-badge position-absolute bottom-0 start-0 translate-middle-y ms-4 p-3 d-none d-sm-block">
+        <div class="eyebrow">Est.</div>
+        <div class="font-display fs-3">2018</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-baseline mb-4">
+    <h2 class="font-display">New Arrivals</h2>
+    <a href="{{ url_for('products') }}" class="text-decoration-none" style="color: var(--brass);">View all →</a>
+  </div>
+  <div class="row g-4">
+    {% for p in products %}
+    <div class="col-6 col-md-3">
+      <a href="{{ url_for('product_detail', product_id=p.id) }}" class="text-decoration-none text-dark">
+        <div class="card product-card border-0">
+          <img src="{{ p.image_url }}" class="card-img-top rounded-1" alt="{{ p.name }}">
+          <div class="card-body px-0">
+            <h3 class="fs-6 font-display mt-2 mb-1">{{ p.name }}</h3>
+            <p class="text-muted small mb-0">${{ '%.2f'|format(p.price) }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
