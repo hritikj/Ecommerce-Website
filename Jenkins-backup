@@ -1,0 +1,71 @@
+pipeline {
+    agent any
+    environment {
+        // Replace with your actual AWS Account ID and Region
+        AWS_ACCOUNT_ID = ''
+        AWS_REGION     = 'us-east-1'
+        ECR_REGISTRY   = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        IMAGE_NAME     = 'my-app'
+        IMAGE_TAG      = "${BUILD_NUMBER}"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/hritikj/Ecommerce-Website.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'docker compose build'
+            }
+        }
+        
+        stage('Log in to ECR') {
+            steps {
+                // Replaced withAWS with native withCredentials step
+                withCredentials([usernamePassword(
+                    credentialsId: 'aws-user', 
+                    usernameVariable: 'AWS_ACCESS_KEY_ID', 
+                    passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                )]) {
+                    script {
+                        // Environment variables must be explicitly exported inside triple quotes for the AWS CLI to see them
+                        sh """
+                            export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+                            export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+                            aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Tag & Push Images') {
+            steps {
+                script {
+
+                    def images = [
+                        "fieldstead-auth",
+                        "fieldstead-products",
+                        "fieldstead-cart",
+                        "fieldstead-orders",
+                        "fieldstead-gateway",
+                        "fieldstead-frontend",
+                        "fieldstead-mysql",
+                        "fieldstead-nginx"
+                    ]
+
+                    images.each { image ->
+
+                        sh """
+                        docker tag ${image}:latest ${ECR_REGISTRY}/${image}:latest
+                        docker push ${ECR_REGISTRY}/${image}:latest
+                        """
+                    }
+                }
+            }
+        }
+        
+    }
+}
