@@ -3,6 +3,7 @@ variable "cluster_name" {
   default = "ecomm_Cluster"
 }
 
+
 variable "cluster_version" {
   type    = string
   default = "1.32"

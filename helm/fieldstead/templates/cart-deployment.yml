@@ -34,7 +34,7 @@ spec:
               value: "cart_db"
 
             - name: JWT_SECRET
-              value: "change-this-secret-in-production"
+              value: "base64:MyAyH94zgpW/jFFmSEhkKaQ/Rr4i9L7gJBmyyPpgy8Q="
 
             - name: PRODUCT_SERVICE_URL
               value: "http://product-service:4002"

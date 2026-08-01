@@ -1,14 +1,14 @@
-module "vpc" {
-  source  = "../modules/vpc"
-  repository_names = [
-   fieldstead-auth
-   fieldstead-products
-   fieldstead-cart
-   fieldstead-orders
-   fieldstead-gateway
-   fieldstead-frontend
-   fieldstead-nginx
-   fieldstead-mysql
+module "ecr" {
+  source  = "../modules/ecr"
+  repo_name = [
+   "fieldstead-auth",
+   "fieldstead-products",
+   "fieldstead-cart",
+   "fieldstead-orders",
+   "fieldstead-gateway",
+   "fieldstead-frontend",
+   "fieldstead-nginx",
+   "fieldstead-mysql"
   ]
 }
 
@@ -28,6 +28,6 @@ module "eks" {
 
 }
 
-module "ecr" {
-  source = "../modules/ecr"
+module "vpc" {
+  source = "../modules/vpc"
 }
