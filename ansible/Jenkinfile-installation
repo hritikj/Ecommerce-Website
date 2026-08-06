@@ -1,0 +1,18 @@
+pipeline{
+    agent{
+        label 'built-in'
+    }
+    stages{
+        stage('Run Ansible Playbook') {
+            steps {
+                sh '''
+                pwd
+                ansible-playbook \
+                -i /home/ubuntu/Ecommerce-Website/ansible/inventory \
+                /home/ubuntu/Ecommerce-Website/ansible/playbook.yml --limit slave
+                '''
+            }
+        }
+    
+    }
+}
