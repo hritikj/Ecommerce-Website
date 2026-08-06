@@ -1,0 +1,84 @@
+pipeline {
+    agent {
+        label 'slaveNode'
+    }
+    environment {
+        // Replace with your actual AWS Account ID and Region
+        AWS_ACCOUNT_ID = 'Your-AWS-Account-ID'
+        AWS_REGION     = 'us-east-1'
+        ECR_REGISTRY   = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        IMAGE_NAME     = 'my-app'
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        IMAGE_TAG      = "version-${BUILD_NUMBER}"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/hritikj/Ecommerce-Website.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'docker compose build'
+            }
+        }
+        
+        stage('Log in to ECR') {
+            steps {
+                  sh """
+                        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+                    """
+                   }
+        }
+        
+        stage('Tag & Push Images') {
+            steps {
+                script {
+
+                    def images = [
+                        "fieldstead-auth",
+                        "fieldstead-products",
+                        "fieldstead-cart",
+                        "fieldstead-orders",
+                        "fieldstead-gateway",
+                        "fieldstead-frontend",
+                        "fieldstead-mysql",
+                        "fieldstead-nginx"
+                    ]
+
+                    images.each { image ->
+
+                        sh """
+                        docker tag ${image}:latest ${ECR_REGISTRY}/${image}:${IMAGE_TAG}
+                        docker push ${ECR_REGISTRY}/${image}:${IMAGE_TAG}
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Updating EKS Kube-config'){
+            steps{
+                sh '''
+                    aws eks update-kubeconfig \
+                    --region us-east-1 \
+                    --name ecomm_Cluster
+                '''
+            }
+        }
+        
+        stage('Deploy with Helm') {
+            steps {
+                sh '''
+                    pwd
+                    ls -la
+                    helm upgrade --install fieldstead-app ./helm/fieldstead
+                '''
+            }
+        }
+        
+        
+    }
+}
