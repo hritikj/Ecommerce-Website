@@ -1,0 +1,50 @@
+pipeline{
+    agent{
+        label 'slaveNode'
+    }
+    
+    stages{
+        stage('Initialize Stage'){
+            steps{
+                echo 'Initializing Terraform'
+                dir('/home/ubuntu/Ecommerce-Website/terraform') {
+                    sh 'terraform init'
+                }
+            }
+        }
+        
+        stage('Validating Stage'){
+            steps{
+                echo 'Validating Terraform'
+                dir('/home/ubuntu/Ecommerce-Website/terraform') {
+                    sh 'terraform validate'
+                }
+            }
+        }
+        
+        stage('Planning Stage'){
+            steps{
+                echo 'Planning Infra'
+                dir('/home/ubuntu/Ecommerce-Website/terraform') {
+                    sh 'terraform plan -out=tfplan'
+                }
+            }
+        }
+        
+        stage('Execution Stage'){
+            steps{
+                dir('/home/ubuntu/Ecommerce-Website/terraform') {
+                    script{
+                        if (params.STATUS == 'APPLY'){
+                            echo 'Creating Infrastructure'
+                            sh 'terraform apply --auto-approve'
+                        } else if (params.STATUS == 'DESTROY'){
+                            echo 'Destroying Infrastructure'
+                            sh 'terraform apply --auto-approve'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
