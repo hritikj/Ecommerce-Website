@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: "{{ .Values.images.auth.repository }}:{{ .Values.images.auth.tag }}"
+          image: "{{ .Values.images.auth.repository }}:{{ .Values.images.tag }}"
           imagePullPolicy: Always
 
           ports:

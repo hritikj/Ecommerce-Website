@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: "{{ .Values.images.frontend.repository }}:{{ .Values.images.frontend.tag }}"
+          image: "{{ .Values.images.frontend.repository }}:{{ .Values.images.tag }}"
           imagePullPolicy: Always
 
           ports:
