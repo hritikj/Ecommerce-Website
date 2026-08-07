@@ -1,16 +1,16 @@
 pipeline {
     agent {
-        label 'slaveNode'
+        label 'built-in'
     }
     environment {
         // Replace with your actual AWS Account ID and Region
-        AWS_ACCOUNT_ID = 'Your-AWS-Account-ID'
+        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
         AWS_REGION     = 'us-east-1'
         ECR_REGISTRY   = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         IMAGE_NAME     = 'my-app'
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        IMAGE_TAG      = "version-${BUILD_NUMBER}"
+        IMAGE_TAG      = "${BUILD_NUMBER}"
     }
     stages {
         stage('Checkout') {
@@ -24,7 +24,7 @@ pipeline {
                 sh 'docker compose build'
             }
         }
-        
+
         stage('Log in to ECR') {
             steps {
                   sh """
@@ -32,7 +32,7 @@ pipeline {
                     """
                    }
         }
-        
+
         stage('Tag & Push Images') {
             steps {
                 script {
@@ -51,14 +51,14 @@ pipeline {
                     images.each { image ->
 
                         sh """
-                        docker tag ${image}:latest ${ECR_REGISTRY}/${image}:${IMAGE_TAG}
-                        docker push ${ECR_REGISTRY}/${image}:${IMAGE_TAG}
+                        docker tag ${image}:latest ${ECR_REGISTRY}/${image}:${BUILD_NUMBER}
+                        docker push ${ECR_REGISTRY}/${image}:${BUILD_NUMBER}
                         """
                     }
                 }
             }
         }
-        
+
         stage('Updating EKS Kube-config'){
             steps{
                 sh '''
@@ -68,17 +68,22 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Deploy with Helm') {
             steps {
                 sh '''
-                    pwd
-                    ls -la
-                    helm upgrade --install fieldstead-app ./helm/fieldstead
+                    helm upgrade --install fieldstead ./helm/fieldstead \
+                    --set images.auth.tag=${BUILD_NUMBER} \
+                    --set images.product.tag=${BUILD_NUMBER} \
+                    --set images.cart.tag=${BUILD_NUMBER} \
+                    --set images.order.tag=${BUILD_NUMBER} \
+                    --set images.gateway.tag=${BUILD_NUMBER} \
+                    --set images.frontend.tag=${BUILD_NUMBER} \
+                    --set images.mysql.tag=${BUILD_NUMBER} \
+                    --set images.nginx.tag=${BUILD_NUMBER}
                 '''
             }
         }
-        
-        
+
     }
 }
