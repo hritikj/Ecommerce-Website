@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: "{{ .Values.images.mysql.repository }}:{{ .Values.images.tag }}"
+          image: "{{ .Values.images.mysql.repository }}:{{ .Values.images.mysql.tag }}"
           imagePullPolicy: Always
 
           ports:

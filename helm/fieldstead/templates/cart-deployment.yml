@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: cart-service
-          image: "{{ .Values.images.cart.repository }}:{{ .Values.images.tag }}"
+          image: "{{ .Values.images.cart.repository }}:{{ .Values.images.cart.tag }}"
           imagePullPolicy: Always
           ports:
             - containerPort: 4003

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: "{{ .Values.images.nginx.repository }}:{{ .Values.images.tag }}"
+          image: "{{ .Values.images.nginx.repository }}:{{ .Values.images.nginx.tag }}"
           imagePullPolicy: Always
 
           ports:
